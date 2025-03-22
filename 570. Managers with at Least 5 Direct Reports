@@ -1,0 +1,6 @@
+import pandas as pd
+
+def find_managers(employee: pd.DataFrame) -> pd.DataFrame:
+    manager_count = employee["managerId"].value_counts().reset_index()
+    manager_list = manager_count[manager_count["count"]>=5]["managerId"]
+    return employee[employee["id"].isin(manager_list)]["name"].to_frame()
