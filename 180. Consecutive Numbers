@@ -1,0 +1,8 @@
+import pandas as pd
+
+def consecutive_numbers(logs: pd.DataFrame) -> pd.DataFrame:
+    logs["num_prev"] = logs["num"].shift(-1)
+    logs["num_next"] = logs["num"].shift(1)
+    mask1 = logs["num"] == logs["num_prev"]
+    mask2 = logs["num"] == logs["num_next"]
+    return logs[mask1 & mask2]["num"].to_frame().drop_duplicates().rename(columns={'num': 'ConsecutiveNums'})
