@@ -1,0 +1,16 @@
+import pandas as pd
+import numpy as np
+data = [[1, 100], [2, 200], [3, 300]]
+#data = [[1, 100], [1, 100]]
+#data = []
+employee = pd.DataFrame(data, columns=['id', 'salary']).astype({'id':'int64', 'salary':'int64'})
+
+employee = employee["salary"].drop_duplicates().sort_values(ascending=False)
+
+if len(employee)>=2:
+  second = employee.iloc[1]
+elif len(employee) == 0:
+  second = np.nan
+
+frame = pd.DataFrame({"SecondHighestSalary":[second]})
+frame
