@@ -1,0 +1,6 @@
+import pandas as pd
+
+def largest_orders(orders: pd.DataFrame) -> pd.DataFrame:
+    customer_ordernumber_count = orders["customer_number"].value_counts().reset_index()
+    max_count = customer_ordernumber_count["count"].max()
+    return customer_ordernumber_count[customer_ordernumber_count["count"] == max_count]["customer_number"].to_frame()
