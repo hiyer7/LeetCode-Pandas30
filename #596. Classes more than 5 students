@@ -1,0 +1,8 @@
+import pandas as pd
+
+data = [['A', 'Math'], ['B', 'English'], ['C', 'Math'], ['D', 'Biology'], ['E', 'Math'], ['F', 'Computer'], ['G', 'Math'], ['H', 'Math'], ['I', 'Math']]
+courses = pd.DataFrame(data, columns=['student', 'class']).astype({'student':'object', 'class':'object'})#
+
+def find_classes(courses: pd.DataFrame) -> pd.DataFrame:
+    course_student_count=courses["class"].value_counts().reset_index()
+    return course_student_count[course_student_count["count"] >=5]["class"].to_frame()
