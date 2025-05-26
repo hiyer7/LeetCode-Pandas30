@@ -1,0 +1,13 @@
+import pandas as pd
+
+def find_product_recommendation_pairs(product_purchases: pd.DataFrame, product_info: pd.DataFrame) -> pd.DataFrame:
+    product_purchases.drop(columns="quantity", inplace=True)
+    product_info.drop(columns="price", inplace=True)
+    product_purchases_info = product_purchases.merge(product_info, on="product_id")
+    product_purchases_info = product_purchases_info.merge(product_purchases_info, on="user_id")
+    product_purchases_info = product_purchases_info[product_purchases_info["product_id_x"]<product_purchases_info["product_id_y"]]
+    result = product_purchases_info[["product_id_x","product_id_y","category_x","category_y"]].value_counts().reset_index()
+    result = result[result["count"] > 2]
+    result = result.rename(columns={"product_id_x":"product1_id", "product_id_y":"product2_id", "category_x":"product1_category","category_y":"product2_category","count":"customer_count"})
+
+    return result.sort_values(by=["customer_count","product1_id","product2_id"], ascending=[False, True, True])
