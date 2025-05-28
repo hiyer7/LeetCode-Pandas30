@@ -1,0 +1,14 @@
+import pandas as pd
+
+def confirmation_rate(signups: pd.DataFrame, confirmations: pd.DataFrame) -> pd.DataFrame:
+    confirmations = confirmations.merge(signups, how="right", on="user_id")
+    confirmations = confirmations.drop(columns={"time_stamp_x","time_stamp_y"})
+    confirmations_total = confirmations[["user_id"]].value_counts().reset_index(name="total")
+    confirmations_completed = confirmations[confirmations["action"]=="confirmed"]["user_id"].value_counts().reset_index(name="completed")
+
+    result = confirmations_total.merge(confirmations_completed, on="user_id", how="left")
+    result["completed"] = result["completed"].fillna(0)
+    result["confirmation_rate"] = round(result["completed"]/result["total"],2)
+    return result[["user_id","confirmation_rate"]]
+
+    
