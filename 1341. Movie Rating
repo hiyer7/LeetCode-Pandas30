@@ -1,0 +1,16 @@
+import pandas as pd
+
+def movie_rating(movies: pd.DataFrame, users: pd.DataFrame, movie_rating: pd.DataFrame) -> pd.DataFrame:
+    movie_rating_feb_2020 = movie_rating[(movie_rating["created_at"].dt.year == 2020) & (movie_rating["created_at"].dt.month ==2)]
+    users_ratings = users.merge(movie_rating, on="user_id")
+    user = users_ratings[["user_id","name"]].value_counts().reset_index(name="rating_count").sort_values(by=["rating_count","name"],ascending=[False, True]).head(1)["name"]
+
+    movie_ratings = movies.merge(movie_rating_feb_2020, on="movie_id")
+    movie = movie_ratings.groupby("title")["rating"].mean().reset_index(name="movie_rating_count").sort_values(by=["movie_rating_count","title"], ascending=[False, True])["title"].head(1)
+    user = user.to_frame()
+    movie= movie.to_frame()
+
+    user= user.rename(columns={"name":"results"})
+    movie= movie.rename(columns={"title":"results"})
+
+    return pd.concat([user,movie],ignore_index=True)
