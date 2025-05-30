@@ -1,0 +1,9 @@
+import pandas as pd
+
+def gameplay_analysis(activity: pd.DataFrame) -> pd.DataFrame:
+    activity = activity.drop(columns=['device_id','games_played'])
+    activity_merged = activity.merge(activity.groupby('player_id')["event_date"].min().reset_index(name="min_date"), on="player_id")
+    activity_merged['diff'] = activity_merged['event_date']-activity_merged['min_date']
+    
+    activity_merged["fraction"] = round(len(activity_merged[activity_merged['diff']=='1 days'])/activity_merged['player_id'].nunique(),2)
+    return activity_merged["fraction"].head(1).to_frame()
