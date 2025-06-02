@@ -1,0 +1,6 @@
+import pandas as pd
+
+def find_employees(employee: pd.DataFrame) -> pd.DataFrame:
+    employee_merge= employee.merge(employee, left_on="managerId", right_on="id", how='left')
+    return employee_merge[employee_merge['salary_y'] < employee_merge['salary_x']]['name_x'].rename('Employee').to_frame()
+    
