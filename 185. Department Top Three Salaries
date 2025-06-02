@@ -1,0 +1,8 @@
+import pandas as pd
+
+def top_three_salaries(employee: pd.DataFrame, department: pd.DataFrame) -> pd.DataFrame:
+    employee_merged=employee.merge(department, left_on='departmentId', right_on='id')
+    employee_merged.drop(columns=['id_x','departmentId','id_y'], inplace=True)
+    employee_merged = employee_merged.rename(columns={'name_y':'Department', 'name_x':'Employee'})
+    employee_merged['rank']= employee_merged.groupby('Department')['salary'].rank(method='dense', ascending=False)
+    return employee_merged[employee_merged['rank']<4.0].sort_values(by=['Department', 'rank'], ascending=[True, True] )[['Department','Employee','salary']]
