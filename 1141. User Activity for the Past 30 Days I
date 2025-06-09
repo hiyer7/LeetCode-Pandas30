@@ -1,0 +1,8 @@
+import pandas as pd
+
+def user_activity(activity: pd.DataFrame) -> pd.DataFrame:
+    #return activity.groupby('activity_date')['user_id'].count().reset_index(name='active_users')
+    result = activity[(activity['activity_date'] > '2019-06-27') & (activity['activity_date'] < '2019-07-28')]
+    result= result.groupby("activity_date")['user_id'].nunique().reset_index(name='active_users')
+    return result.rename(columns = {"activity_date":"day"})
+    
